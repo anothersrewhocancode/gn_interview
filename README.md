@@ -1,4 +1,5 @@
-
+I have not used the Github  [Ubuntu Runner](https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md) as there was'nt enough room for the resources to spin up a 2 node Kubernetes Cluster.
+I have spun up a ec2 instance and then added the ec2 instance as a self-hosted runner.
 
 ### Kubernetes Cluster Configuration For Kind
 ```
@@ -45,3 +46,16 @@ nodes:
 - role: worker
 - role: worker
 ```
+Create the cluster using the below command
+
+`$ kind create cluster --name mycluster --config cluster.yaml`
+
+I have also installed other binaries needed for Deploying Kubernetes objects like
+- kubectl
+- helm
+- apache2-utils
+
+Load Testing Setup:
+ab tool ( Apache Bench)  is used to generate traffic for the load testing.
+
+The helm charts also has Pod disruption budgets to prevent voluntary eviction.

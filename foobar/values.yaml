@@ -4,6 +4,14 @@
 
 replicaCount: 2
 
+
+limits:
+  cpu: 1000m
+  memory: 500Mi
+requests:
+  cpu: 10m
+  memory: "100"
+
 image:
   repository: hashicorp/http-echo
   # Overrides the image tag whose default is the chart appVersion.
