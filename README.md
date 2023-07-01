@@ -59,3 +59,6 @@ Load Testing Setup:
 ab tool ( Apache Bench)  is used to generate traffic for the load testing.
 
 The helm charts also has Pod disruption budgets to prevent voluntary eviction.
+
+Strech Goal:
+ - Monitoring Solution (WIP)
