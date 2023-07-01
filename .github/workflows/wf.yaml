@@ -24,7 +24,7 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: deploy the k8s objects
-      run: helm upgrade --install fb foobar/
+      run: helm upgrade --install fb foobar
 
     - name: benchmark
       id: ab_foo
