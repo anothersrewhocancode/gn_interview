@@ -17,19 +17,20 @@ jobs:
   build:
     runs-on: self-hosted
     outputs:
-      ab: ${{ steps.ab.outputs.message }}
+      ab_foo: ${{ steps.ab_foo.outputs.message }}
+      ab_bar: ${{ steps.ab_bar.outputs.message }}
 
     steps:
     - uses: actions/checkout@v3
 
     - name: deploy the k8s objects
-      run: helm install fb foobar/
+      run: helm upgrade --install fb foobar/
 
     - name: benchmark
-      id: ab
+      id: ab_foo
       run: |
-        ab -n 500 http://foo.localhost/ > result.log 2> /dev/null
-        cat result.log | awk '/Time per request:/ {time=$4}
+        ab -n 500 http://foo.localhost/ > result_foo.log 2> /dev/null
+        cat result_foo.log | awk '/Time per request:/ {time=$4}
                       /Failed requests:/ {failed=$3}
                       /Requests per second:/ {reqs=$4}
                       / 90%/{p90=$2}
@@ -38,7 +39,23 @@ jobs:
                           print "Failed requests percent: " failed;
                           print "Requests per second: " reqs;
                           print "P90 request duration: " p90;
-                          print "P95 request duration: " p95}' > out.txt
+                          print "P95 request duration: " p95}' > out_foo.txt
+      shell: bash
+
+    - name: benchmark
+      id: ab_bar
+      run: |
+        ab -n 500 http://bar.localhost/ > result_bar.log 2> /dev/null
+        cat result_bar.log | awk '/Time per request:/ {time=$4}
+                      /Failed requests:/ {failed=$3}
+                      /Requests per second:/ {reqs=$4}
+                      / 90%/{p90=$2}
+                      / 95%/{p95=$2}
+                      END {print "Time per requests: " time;
+                          print "Failed requests percent: " failed;
+                          print "Requests per second: " reqs;
+                          print "P90 request duration: " p90;
+                          print "P95 request duration: " p95}' > out_bar.txt
       shell: bash
 
     - name: Comment load test stats
@@ -47,5 +64,6 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         issue-number: ${{ github.event.pull_request.number }}
         body-path: |
-          out.txt
+          out_foo.txt
+          out_bar.txt
         reactions: eyes
