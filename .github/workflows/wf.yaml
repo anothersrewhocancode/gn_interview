@@ -29,10 +29,11 @@ jobs:
     - name: deploy the k8s objects
       run: helm upgrade --install fb foobar
 
-    - name: benchmark
+    - name: benchmark results for foo
       id: ab_foo
       run: |
         ab -n 500 http://foo.localhost/ > result_foo.log 2> /dev/null
+        echo "Benchmarking HTTP requests for foo.localhost" > out_foo.txt
         cat result_foo.log | awk '/Time per request:/ {time=$4}
                       /Failed requests:/ {failed=$3}
                       /Requests per second:/ {reqs=$4}
@@ -45,10 +46,11 @@ jobs:
                           print "P95 request duration: " p95}' > out_foo.txt
       shell: bash
 
-    - name: benchmark
+    - name: benchmark results for bar
       id: ab_bar
       run: |
         ab -n 500 http://bar.localhost/ > result_bar.log 2> /dev/null
+        echo "Benchmarking HTTP requests for bar.localhost" > out_bar.txt
         cat result_bar.log | awk '/Time per request:/ {time=$4}
                       /Failed requests:/ {failed=$3}
                       /Requests per second:/ {reqs=$4}
