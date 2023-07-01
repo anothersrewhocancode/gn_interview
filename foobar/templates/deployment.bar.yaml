@@ -20,6 +20,13 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           args:
             - "-text=bar"
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 500Mi
+            requests:
+              cpu: 10m
+              memory: "100"
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
